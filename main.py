@@ -62,6 +62,7 @@ def setup_tasks(config, resources):
 if __name__ == "__main__":
     config = {
         'data_sources': {},
+        'gauge_faces': {},
         'hardware': {}
     }
     resources = setup_hardware(config['hardware'])

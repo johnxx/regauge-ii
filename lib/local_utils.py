@@ -2,7 +2,7 @@ import asyncio
 import time
 from math import floor
 
-debug = True
+debug = False
 
 def print_dbg(some_string, **kwargs):
     if debug:
@@ -10,6 +10,7 @@ def print_dbg(some_string, **kwargs):
 
 async def schedule(frequency, coroutine_function, *args, **kwargs):
     run_every_ms = floor(1_000 / frequency)
+    print_dbg("Running {} every {} ms".format(coroutine_function, run_every_ms))
     while True:
         started_ms = time.ticks_ms()
         await coroutine_function(*args, **kwargs)

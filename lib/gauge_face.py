@@ -1,9 +1,9 @@
-from stream_spec import StreamSpec
-from timeseries import TimeSeries
+from lib.stream_spec import StreamSpec
+from lib.time_series import TimeSeries
 
 class GaugeFace:
     
-    update_freq = 30
+    update_freq = 5
     
     def __init__(self, name, options, resources):
         self.name = name
@@ -12,12 +12,12 @@ class GaugeFace:
         
         self.data_bus = resources['data_bus'] if 'data_bus' in resources else None
         if 'streams' in options and options['streams']:
+            self.streams = {}
             for name, stream in options['streams'].items():
                 self.streams[name] = TimeSeries(
-                    stream_spec=StreamSpec(
-                        **stream['stream_spec'], 
-                        **stream['time_series'],
-                    data_bus=self.data_bus))
+                    stream_spec=StreamSpec(**stream['stream_spec']), 
+                    data_bus=self.data_bus, 
+                    **stream['time_series'])
 
         self.config_bus = resources['config_bus'] if 'config_bus' in resources else None
         if 'config_bus' in resources:

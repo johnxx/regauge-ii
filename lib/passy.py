@@ -10,6 +10,7 @@ class Passy():
         self.subscriptions = {}
         self.subscribers = {}
         self.outbox = {}
+        self.is_async = False
         if task_manager:
             self.task_manager = task_manager
             self.is_async = True

@@ -12,12 +12,14 @@ class TimeSeries():
             print("upto: {}, retain_for_s: {}".format(upto_vals, retain_for_s))
         self.upto_vals = upto_vals
         self.retain_for_s = retain_for_s
+        print("upto_vals: {}, retain_for_s: {}".format(upto_vals, retain_for_s))
 
         self.stream_spec = stream_spec
         self.min_val = self.max_val = self.stream_spec.min_val
         self.data = [(time.ticks_ms(), self.stream_spec.min_val)]
         
-        data_bus.sub(self.stream_updated, "data.{}".format(stream_spec.field_spec))
+        if data_bus:
+            data_bus.sub(self.stream_updated, "data.{}".format(stream_spec.field_spec))
 
     @property
     def subscribed_streams(self):
@@ -34,6 +36,10 @@ class TimeSeries():
     @property
     def value(self):
         return self.data[-1][1]
+    
+    @property
+    def values(self):
+        return [x[1] for x in self.data]
     
     @property
     def earliest(self):
@@ -67,7 +73,8 @@ class TimeSeries():
             del self.data[:-self.upto_vals]
         if self.retain_for_s > 0:
             for n, v in enumerate(self.data):
-                if v[0] < cur_time - self.retain_for_s:
+                if v[0] < (cur_time - self.retain_for_s * 1000):
+                    print("Trimmed old value!")
                     del self.data[n]
                 else:
                     break
